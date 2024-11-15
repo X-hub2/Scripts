@@ -300,7 +300,6 @@ UIAspectRatioConstraint_3.AspectRatio = 3.212
 UIAspectRatioConstraint_4.Parent = Main
 UIAspectRatioConstraint_4.AspectRatio = 1.667
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/X-hub2/hyper-lib/refs/heads/main/noLoser"))()
 
 -- Scripts:
 
@@ -1123,7 +1122,11 @@ Window:AddSection({ Name = "Parry Misc", Tab = Main })
 	end,
 })
 				
-			
+	
+loadstring(game:HttpGet("https://raw.githubusercontent.com/X-hub2/hyper-lib/refs/heads/main/noLoser"))()
+
+
+
 
 -- Start the check in a new thread
 spawn(checkSpamming)
@@ -1151,3 +1154,4 @@ UICorner.Parent = ImageButton
 ImageButton.MouseButton1Click:Connect(function()
     game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.LeftAlt, false, game)
 end)
+
