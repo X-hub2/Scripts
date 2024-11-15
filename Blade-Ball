@@ -1,3 +1,6 @@
+if _G.Ran == true then return end
+wait()
+_G.Ran = true
 repeat wait() until game:IsLoaded()
 local Stats = game:GetService("Stats")
 local Players = game:GetService("Players")
@@ -35,51 +38,7 @@ local ai_Enabled = false
 local auto_win = false
 local tp_hit = false
 local potanum = 15
-
-getgenv().straight = false
-getgenv().upwards = false
-getgenv().random = false
-
 local Services = {game:GetService("AdService"),game:GetService("SocialService")}
-
---// Library First Position
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-
-local Window = Fluent:CreateWindow({
-    Title = "X Hub",
-    SubTitle = "Blade Ball",
-    TabWidth = 160,
-    Size = UDim2.fromOffset(500, 300),
-    Acrylic = true,
-    Theme = "Darker",
-    MinimizeKey = Enum.KeyCode.LeftControl
-})
-
-local Tabs = { 
-    Main = Window:AddTab({ Title = "Main", Icon = "Combat" }),
-    }
-    
-    Tabs.Home:AddParagraph({
-        Title = "Hello!",
-        Content = "Welcome to Kalitor Blade Ball"
-    })
-  
-  Tabs.Home:AddParagraph({
-        Title = "REMEMBER!",
-        Content = "This script was recoded from Nurysium. We've fixed Auto Parry and other functions."
-    }) 
-
-local Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Auto Parry", Default = true })
-
-Toggle:OnChanged(function(v)
-    aura_Enabled = v
-end)
-
-local Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Auto Spam", Default = false })
-
-Toggle:OnChanged(function(v)
-    auto_spam = v
-end)
 
 local function get_closest_entity(Object)
 	task.spawn(function()
@@ -153,139 +112,391 @@ ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
 	end)
 end)
 
-local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
-local ManualSpam
+-- Call resolve_parry_Remote once to initialize the originalParryRemote
+
+--start, the real one
+
+local MauaulSpam -- Declare MauaulSpam globally
 
 function ManualSpam()
-    ScreenGui.Name = "ScreenGui"
-    ScreenGui.Parent = game.CoreGui
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    ScreenGui.ResetsOnSpawn = false
-
-    Frame.Size = UDim2.new(0, 100, 0, 50)
-    Frame.AnchorPoint = Vector2.new(0.5, 0.5)
-    Frame.Position = UDim2.new(0.5, 0, 0.25, 0)
-    Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    Frame.Visible = true
-    Frame.Parent = ScreenGui
-
-    local Button = Instance.new("TextButton")
-    Button.Size = UDim2.new(0, 100, 0, 50)
-    Button.AnchorPoint = Vector2.new(0.5, 0.5)
-    Button.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Button.Text = "KALITOR"
-    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Button.BackgroundTransparency = 1
-    Button.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
-    Button.Parent = Frame
-
-    local dragging = false
-    local dragInput
-    local dragStart
-    local startPos
-
-    local function update(input)
-        local delta = input.Position - dragStart
-        Frame.Position = UDim2.new(
-            startPos.X.Scale,
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
-            startPos.Y.Offset + delta.Y
-        )
+    -- Gui to Lua
+    -- Version: 3.2
+    
+    if MauaulSpam then
+        MauaulSpam:Destroy()
+        MauaulSpam = nil
+        return
     end
 
-    local function startDragging(input)
-        dragging = true
-        dragStart = input.Position
-        startPos = Frame.Position
-        wasDragged = true
+    MauaulSpam = Instance.new("ScreenGui")
+    MauaulSpam.Name = "MauaulSpam"
+    MauaulSpam.Parent = game.CoreGui
+    MauaulSpam.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    MauaulSpam.ResetOnSpawn = false
+
+    local Main = Instance.new("Frame")
+    Main.Name = "Main"
+    Main.Parent = MauaulSpam
+    Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Main.BorderSizePixel = 0
+    Main.Position = UDim2.new(0.41414836, 0, 0.404336721, 0)
+    Main.Size = UDim2.new(0.227479532, 0, 0.191326529, 0)
+
+    local UICorner = Instance.new("UICorner")
+    UICorner.Parent = Main
+
+    local IndercantorBlahblah = Instance.new("Frame")
+    IndercantorBlahblah.Name = "IndercantorBlahblah"
+    IndercantorBlahblah.Parent = Main
+    IndercantorBlahblah.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    IndercantorBlahblah.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    IndercantorBlahblah.BorderSizePixel = 0
+    IndercantorBlahblah.Position = UDim2.new(0.0280000009, 0, 0.0733333305, 0)
+    IndercantorBlahblah.Size = UDim2.new(0.0719999969, 0, 0.119999997, 0)
+
+    local UICorner_2 = Instance.new("UICorner")
+    UICorner_2.CornerRadius = UDim.new(1, 0)
+    UICorner_2.Parent = IndercantorBlahblah
+
+    local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+    UIAspectRatioConstraint.Parent = IndercantorBlahblah
+
+    local PC = Instance.new("TextLabel")
+    PC.Name = "PC"
+    PC.Parent = Main
+    PC.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    PC.BackgroundTransparency = 1.000
+    PC.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    PC.BorderSizePixel = 0
+    PC.Position = UDim2.new(0.547999978, 0, 0.826666653, 0)
+    PC.Size = UDim2.new(0.451999992, 0, 0.173333332, 0)
+    PC.Font = Enum.Font.Unknown
+    PC.Text = "PC: E to spam"
+    PC.TextColor3 = Color3.fromRGB(57, 57, 57)
+    PC.TextScaled = true
+    PC.TextSize = 16.000
+    PC.TextWrapped = true
+
+    local UITextSizeConstraint = Instance.new("UITextSizeConstraint")
+    UITextSizeConstraint.Parent = PC
+    UITextSizeConstraint.MaxTextSize = 16
+
+    local UIAspectRatioConstraint_2 = Instance.new("UIAspectRatioConstraint")
+    UIAspectRatioConstraint_2.Parent = PC
+    UIAspectRatioConstraint_2.AspectRatio = 4.346
+
+    local IndercanotTextBlah = Instance.new("TextButton")
+    IndercanotTextBlah.Name = "IndercanotTextBlah"
+    IndercanotTextBlah.Parent = Main
+    IndercanotTextBlah.Active = false
+    IndercanotTextBlah.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    IndercanotTextBlah.BackgroundTransparency = 1.000
+    IndercanotTextBlah.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    IndercanotTextBlah.BorderSizePixel = 0
+    IndercanotTextBlah.Position = UDim2.new(0.164000005, 0, 0.326666653, 0)
+    IndercanotTextBlah.Selectable = false
+    IndercanotTextBlah.Size = UDim2.new(0.667999983, 0, 0.346666664, 0)
+    IndercanotTextBlah.Font = Enum.Font.GothamBold
+    IndercanotTextBlah.Text = "OFF"
+    IndercanotTextBlah.TextColor3 = Color3.fromRGB(255, 255, 255)
+    IndercanotTextBlah.TextScaled = true
+    IndercanotTextBlah.TextSize = 24.000
+    IndercanotTextBlah.TextWrapped = true
+
+    local UIGradient = Instance.new("UIGradient")
+    UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 0, 4)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))}
+    UIGradient.Parent = IndercanotTextBlah
+
+    local UITextSizeConstraint_2 = Instance.new("UITextSizeConstraint")
+    UITextSizeConstraint_2.Parent = IndercanotTextBlah
+    UITextSizeConstraint_2.MaxTextSize = 52
+
+    local UIAspectRatioConstraint_3 = Instance.new("UIAspectRatioConstraint")
+    UIAspectRatioConstraint_3.Parent = IndercanotTextBlah
+    UIAspectRatioConstraint_3.AspectRatio = 3.212
+
+    local UIAspectRatioConstraint_4 = Instance.new("UIAspectRatioConstraint")
+    UIAspectRatioConstraint_4.Parent = Main
+    UIAspectRatioConstraint_4.AspectRatio = 1.667
+
+--Properties:
+
+MauaulSpam.Name = "MauaulSpam"
+MauaulSpam.Parent = game.CoreGui
+MauaulSpam.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+MauaulSpam.ResetOnSpawn = false
+
+Main.Name = "Main"
+Main.Parent = MauaulSpam
+Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Main.BorderSizePixel = 0
+Main.Position = UDim2.new(0.41414836, 0, 0.404336721, 0)
+Main.Size = UDim2.new(0.227479532, 0, 0.191326529, 0)
+
+UICorner.Parent = Main
+
+IndercantorBlahblah.Name = "IndercantorBlahblah"
+IndercantorBlahblah.Parent = Main
+IndercantorBlahblah.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+IndercantorBlahblah.BorderColor3 = Color3.fromRGB(0, 0, 0)
+IndercantorBlahblah.BorderSizePixel = 0
+IndercantorBlahblah.Position = UDim2.new(0.0280000009, 0, 0.0733333305, 0)
+IndercantorBlahblah.Size = UDim2.new(0.0719999969, 0, 0.119999997, 0)
+
+UICorner_2.CornerRadius = UDim.new(1, 0)
+UICorner_2.Parent = IndercantorBlahblah
+
+UIAspectRatioConstraint.Parent = IndercantorBlahblah
+
+PC.Name = "PC"
+PC.Parent = Main
+PC.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+PC.BackgroundTransparency = 1.000
+PC.BorderColor3 = Color3.fromRGB(0, 0, 0)
+PC.BorderSizePixel = 0
+PC.Position = UDim2.new(0.547999978, 0, 0.826666653, 0)
+PC.Size = UDim2.new(0.451999992, 0, 0.173333332, 0)
+PC.Font = Enum.Font.Unknown
+PC.Text = "PC: E to spam"
+PC.TextColor3 = Color3.fromRGB(57, 57, 57)
+PC.TextScaled = true
+PC.TextSize = 16.000
+PC.TextWrapped = true
+
+UITextSizeConstraint.Parent = PC
+UITextSizeConstraint.MaxTextSize = 16
+
+UIAspectRatioConstraint_2.Parent = PC
+UIAspectRatioConstraint_2.AspectRatio = 4.346
+
+IndercanotTextBlah.Name = "IndercanotTextBlah"
+IndercanotTextBlah.Parent = Main
+IndercanotTextBlah.Active = false
+IndercanotTextBlah.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+IndercanotTextBlah.BackgroundTransparency = 1.000
+IndercanotTextBlah.BorderColor3 = Color3.fromRGB(0, 0, 0)
+IndercanotTextBlah.BorderSizePixel = 0
+IndercanotTextBlah.Position = UDim2.new(0.164000005, 0, 0.326666653, 0)
+IndercanotTextBlah.Selectable = false
+IndercanotTextBlah.Size = UDim2.new(0.667999983, 0, 0.346666664, 0)
+IndercanotTextBlah.Font = Enum.Font.GothamBold
+IndercanotTextBlah.Text = "OFF"
+IndercanotTextBlah.TextColor3 = Color3.fromRGB(255, 255, 255)
+IndercanotTextBlah.TextScaled = true
+IndercanotTextBlah.TextSize = 24.000
+IndercanotTextBlah.TextWrapped = true
+
+UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 0, 4)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))}
+UIGradient.Parent = IndercanotTextBlah
+
+UITextSizeConstraint_2.Parent = IndercanotTextBlah
+UITextSizeConstraint_2.MaxTextSize = 52
+
+UIAspectRatioConstraint_3.Parent = IndercanotTextBlah
+UIAspectRatioConstraint_3.AspectRatio = 3.212
+
+UIAspectRatioConstraint_4.Parent = Main
+UIAspectRatioConstraint_4.AspectRatio = 1.667
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/X-hub2/hyper-lib/refs/heads/main/noLoser"))()
+
+-- Scripts:
+
+local function HEUNEYP_fake_script() -- IndercanotTextBlah.ColorChangeScript 
+	local script = Instance.new('LocalScript', IndercanotTextBlah)
+
+	local button = script.Parent
+	local UIGredient = button.UIGradient
+	local NeedToChange = script.Parent.Parent.IndercantorBlahblah
+	local userInputService = game:GetService("UserInputService")
+	local RunService = game:GetService("RunService")
+
+	-- ColorSequences à¸ªà¸³à¸«à¸£à¸±à¸šà¸ªà¸µà¹€à¸‚à¸µà¸¢à¸§à¹à¸¥à¸°à¸ªà¸µà¹à¸”à¸‡
+	local green_Color = {
+		ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), 
+		ColorSequenceKeypoint.new(0.75, Color3.fromRGB(0, 255, 0)), 
+		ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
+	}
+
+	local red_Color = {
+		ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), 
+		ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 0, 0)), 
+		ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
+	}
+
+	local current_Color = red_Color
+	local target_Color = green_Color
+	local is_Green = false
+	local transition = false
+	local transition_Time = 1
+	local start_Time
+
+	local function startColorTransition()
+		transition = true
+		start_Time = tick()
+	end
+
+	RunService.Heartbeat:Connect(function()
+		if transition then
+			local elapsed = tick() - start_Time
+			local alpha = math.clamp(elapsed / transition_Time, 0, 1)
+
+			local new_Color = {}
+			for i = 1, #current_Color do
+				local start_Color = current_Color[i].Value
+				local end_Color = target_Color[i].Value
+				new_Color[i] = ColorSequenceKeypoint.new(
+					current_Color[i].Time,
+					start_Color:Lerp(end_Color, alpha)
+				)
+			end
+
+			UIGredient.Color = ColorSequence.new(new_Color)
+
+			if alpha >= 1 then
+				transition = false
+				current_Color, target_Color = target_Color, current_Color
+			end
+		end
+	end)
+
+	local function toggleColor()
+		if not transition then
+			is_Green = not is_Green
+			if is_Green then
+				target_Color = green_Color
+				NeedToChange.BackgroundColor3 = Color3.new(0, 1, 0)
+			else
+				target_Color = red_Color
+				NeedToChange.BackgroundColor3 = Color3.new(1, 0, 0)
+			end
+			startColorTransition()
+		end
+	end
+
+	button.MouseButton1Click:Connect(toggleColor)
+
+	userInputService.InputBegan:Connect(function(input, gameProcessed)
+		if gameProcessed then return end
+		if input.KeyCode == Enum.KeyCode.E then
+			toggleColor()
+		end
+	end)
+
+	local Services = {game:GetService("AdService"), game:GetService("SocialService")}
+	local originalParryRemote = nil
+
+	function resolve_parry_Remote()
+        local temp_remote = game:GetService("VirtualUser"):WaitForChild("\n\n\n\n\n")
+        if not temp_remote or not temp_remote:IsA('RemoteEvent') then
+            return
+        end
+        originalParryRemote = temp_remote
     end
 
-    local function stopDragging()
-        dragging = false
-    end
+    resolve_parry_Remote()
+    
+	local camera = workspace.CurrentCamera
+	local mouse = game.Players.LocalPlayer:GetMouse()
 
-    Button.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            startDragging(input)
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    stopDragging()
-                end
-            end)
-        end
-    end)
+	local function getClosestEntity()
+		local closest_Entity = nil
+		local shortestDistance = math.huge
 
-    Button.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end)
+		for _, entity in pairs(workspace.Alive:GetChildren()) do
+			if entity:IsA("Model") and entity:FindFirstChild("HumanoidRootPart") then
+				local screenPoint = camera:WorldToViewportPoint(entity.HumanoidRootPart.Position)
+				local distanceToMouse = (Vector2.new(screenPoint.X, screenPoint.Y) - Vector2.new(mouse.X, mouse.Y)).Magnitude
 
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
-        if dragging and input == dragInput then
-            update(input)
-        end
-    end)
+				if distanceToMouse < shortestDistance then
+					closest_Entity = entity
+					shortestDistance = distanceToMouse
+				end
+			end
+		end
 
-    local camera = workspace.CurrentCamera
-    local mouse = game.Players.LocalPlayer:GetMouse()
+		return closest_Entity
+	end
 
-    local function getClosestEntity()
-        local closest_Entity = nil
-        local shortestDistance = math.huge
+	RunService.RenderStepped:Connect(function()
+		if is_Green and originalParryRemote then
+			local closest_Entity = getClosestEntity()
+			if closest_Entity then
+				local cf = camera.CFrame
+				local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
 
-        for _, entity in pairs(workspace.Alive:GetChildren()) do
-            if entity:IsA("Model") and entity:FindFirstChild("HumanoidRootPart") then
-                local screenPoint = camera:WorldToViewportPoint(entity.HumanoidRootPart.Position)
-                local distanceToMouse = (Vector2.new(screenPoint.X, screenPoint.Y) - Vector2.new(mouse.X, mouse.Y)).Magnitude
+				originalParryRemote:FireServer(
+					0,
+					CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
+					{[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
+					{closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
+					false
+				)
+			end
+		end
+	end)
 
-                if distanceToMouse < shortestDistance then
-                    closest_Entity = entity
-                    shortestDistance = distanceToMouse
-                end
-            end
-        end
+	
+	end
+coroutine.wrap(HEUNEYP_fake_script)()
+local function WWJM_fake_script() -- Main.LocalScript 
+	local script = Instance.new('LocalScript', Main)
 
-        return closest_Entity
-    end
+	local UserInputService = game:GetService("UserInputService")
+	
+	local gui = script.Parent
+	local dragging
+	local dragInput
+	local dragStart
+	local startPos
+	
+	local function update(input)
+		local delta = input.Position - dragStart
+		local newPosition = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	
+		-- à¹ƒà¸Šà¹‰ Tween à¹€à¸žà¸·à¹ˆà¸­à¹ƒà¸«à¹‰à¸à¸²à¸£à¹€à¸„à¸¥à¸·à¹ˆà¸­à¸™à¸—à¸µà¹ˆà¸‚à¸­à¸‡ Frame à¹€à¸›à¹‡à¸™à¹„à¸›à¸­à¸¢à¹ˆà¸²à¸‡à¸£à¸²à¸šà¸£à¸·à¹ˆà¸™
+		local TweenService = game:GetService("TweenService")
+		local tweenInfo = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+		local tween = TweenService:Create(gui, tweenInfo, {Position = newPosition})
+		tween:Play()
+	end
+	
+	gui.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			dragStart = input.Position
+			startPos = gui.Position
+	
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+	
+	gui.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			dragInput = input
+		end
+	end)
+	
+	UserInputService.InputChanged:Connect(function(input)
+		if dragging and input == dragInput then
+			update(input)
+		end
+	end)
+	
+end
+coroutine.wrap(WWJM_fake_script)()
 
-    local togglemanualspam = false
-    local parryConnection
-
-    Button.MouseButton1Click:Connect(function()
-        togglemanualspam = not togglemanualspam
-        if togglemanualspam then
-            Button.Text = "On"
-            Button.TextColor3 = Color3.fromRGB(0, 255, 0)
-
-            parryConnection = game:GetService("RunService").RenderStepped:Connect(function()
-                if togglemanualspam and originalParryRemote then
-                    local closest_Entity = getClosestEntity()
-                    if closest_Entity then
-                        local cf = camera.CFrame
-                        originalParryRemote:FireServer(
-                            0,
-                            cf,
-                            {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
-                            {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
-                            false
-                        )
-                    end
-                end
-            end)
-        else
-            Button.Text = "Off"
-            Button.TextColor3 = Color3.fromRGB(255, 0, 0)
-
-            if parryConnection then
-                parryConnection:Disconnect()
-                parryConnection = nil
-            end
-        end
-    end)
 end
 
 local function clamp(value, min, max)
@@ -296,7 +507,7 @@ local self = Nurysium_Util.getBall()
 	local Visualize = Instance.new("Part",workspace)
 	local Visualize1 = Instance.new("Part",workspace)
 	wait(0.5)
-	Visualize.Color = Color3.new(0, 0, 0)
+	Visualize.Color = Color3.new(0, 1, 0)
 	Visualize.Material = Enum.Material.ForceField
 	Visualize.Transparency = 0.5
 	Visualize.Anchored = true
@@ -304,7 +515,7 @@ local self = Nurysium_Util.getBall()
 	Visualize.CastShadow = false
 	Visualize.Shape = Enum.PartType.Ball
 	Visualize.Size = Vector3.new(30,30,30)
-	Visualize1.Color = Color3.new(0, 1, 1)
+	Visualize1.Color = Color3.new(1, 0, 0)
 	Visualize1.Material = Enum.Material.ForceField
 	Visualize1.Transparency = 0.5
 	Visualize1.Anchored = true
@@ -531,9 +742,10 @@ Takentime = tick() - aura_table.hit_Time
 end)
 
 task.spawn(function()
-
     autospamvar = RunService.Heartbeat:Connect(function()
+        -- Pre-check if auto_spam is enabled, player exists, and not in training mode
         if not auto_spam or not workspace.Alive:FindFirstChild(local_player.Name) or training_mode then
+            -- Reset aura table and spam states
             aura_table.hit_Count = 0
             aura_table.is_Spamming = false
             aura_table.last_target = nil
@@ -542,41 +754,43 @@ task.spawn(function()
             return
         end
 
-        if closest_Entity and workspace.Alive:FindFirstChild(closest_Entity.Name) 
-           and ((not standalone and aura_table.is_Spamming) or standalone) then
+        -- Proceed only if closest entity is valid and in workspace
+        if closest_Entity and workspace.Alive:FindFirstChild(closest_Entity.Name) and ((not standalone and aura_table.is_Spamming) or (standalone)) then
             local playerPosition = local_player.Character.PrimaryPart.Position
             local entityPosition = closest_Entity.HumanoidRootPart.Position
-            local distanceToEntity = local_player:DistanceFromCharacter(entityPosition)
+                local distanceToEntity = local_player:DistanceFromCharacter(entityPosition)
+                -- Perform spam actions only when within range
+                if distanceToEntity <= aura_table.spam_Range then
+                    ismyautoparryspamming = true
 
-            if distanceToEntity <= aura_table.spam_Range then
-                ismyautoparryspamming = true
+                    -- Pre-compute values before the loop for efficiency
+                    local cf = camera.CFrame
+                    local randomTarget = Vector3.new(math.random(-1000, 1000), math.random(0, 1000), math.random(100, 1000))
+                    local targetPosition = closest_Entity_To_mouse.HumanoidRootPart.Position
+                    local fireArgs = {
+                        {[closest_Entity_To_mouse.Name] = targetPosition},
+                        {targetPosition.X, targetPosition.Y}
+                    }
 
-                local cf = camera.CFrame
-                local randomTarget = Vector3.new(math.random(-1000, 1000), math.random(0, 1000), math.random(100, 1000))
-                local targetPosition = closest_Entity_To_mouse.HumanoidRootPart.Position
-                local fireArgs = {
-                    {[closest_Entity_To_mouse.Name] = targetPosition},
-                    {targetPosition.X, targetPosition.Y}
-                }
-
-                task.defer(function()
+                    -- Perform spamming asynchronously for speed using task.defer
+                    task.defer(function()
                         for count = 1, potanum do
-                            if auto_spam then
-                                originalParryRemote:FireServer(0, CFrame.new(cf.Position, randomTarget), unpack(fireArgs)) 
+                            if auto_curve then
+                                originalParryRemote:FireServer(0, CFrame.new(cf.Position, randomTarget), unpack(fireArgs))
+                            else
+                                originalParryRemote:FireServer(0, cf, unpack(fireArgs))
                             end
-                      end
-
+                        end
+                    end)
+                else
+                    -- Reset spam state if out of range
                     ismyautoparryspamming = false
-                end)
-            else
-                ismyautoparryspamming = false
-            end
+                end
         else
+            -- Reset spam state if entity is not found
             ismyautoparryspamming = false
         end
     end)
-        stopLoop = true
-end)
 
 autoparryvar = RunService.Heartbeat:Connect(function()
     if not aura_Enabled or not (workspace.Alive:FindFirstChild(local_player.Name) or training_mode) then
@@ -696,48 +910,24 @@ autoparryvar = RunService.Heartbeat:Connect(function()
         local target_X = targetPosition.X
         local target_Y = targetPosition.Y
 
-if originalParryRemote then
-if auto_curve then
-    if straight then 
-              originalParryRemote:FireServer(
-                0, 
-                CFrame.lookAt(cf.Position, cf.Position + Vector3.new(0, -1, 0)), 
-                {[closest_Entity_To_mouse.Name] = targetPosition}, 
-                {target_X, target_Y}, 
-                false
-            )
-
-          elseif upwards then 
+        if auto_curve then
             originalParryRemote:FireServer(
-                0, 
-                CFrame.lookAt(cf.Position, cf.Position + Vector3.new(0, 1, 0)), 
-                {[closest_Entity_To_mouse.Name] = targetPosition}, 
-                {target_X, target_Y}, 
-                false
-            )  
-
-          elseif random then 
-          originalParryRemote:FireServer(
                 0,
-                CFrame.lookAt(cf.Position, cf.Position + Vector3.new(
-                    math.random(-100, 100), math.random(-100, 100), math.random(-100, 100))),
+                CFrame.new(cf.Position, Vector3.new(math.random(-1000, 1000), math.random(0, 1000), math.random(100, 1000))),
                 {[closest_Entity_To_mouse.Name] = targetPosition},
                 {target_X, target_Y},
                 false
-            ) 
-        end 
-    else 
-    local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
-
-				originalParryRemote:FireServer(
-					0,
-					CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
-					{[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
-					{closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
-					false
-				)
-  end
-end
+            )
+        else
+            local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
+            originalParryRemote:FireServer(
+                0,
+                CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
+                {[closest_Entity_To_mouse.Name] = targetPosition},
+                {target_X, target_Y},
+                false
+            )
+        end
 
         aura_table.hit_Count = aura_table.hit_Count + 1
         task.delay(0.55 + (ping / 100), function()
@@ -755,6 +945,7 @@ end
         aura_table.canParry = true
     end)
 end)
+end)
 -- Define a safe disconnect function to avoid errors
 local function safeDisconnect(connection)
     if connection and connection.Disconnect then
@@ -766,6 +957,7 @@ end
 local function manageConnection(flag, varName, runServiceFunc)
     if flag then
         if not _G[varName] then
+            -- Create the RunService connection if the flag is true and connection is not already created
             _G[varName] = RunService[runServiceFunc]:Connect(function()
                 -- Your code for what the connection does
             end)
@@ -786,84 +978,176 @@ RunService.Heartbeat:Connect(function()
     manageConnection(auto_win, "autowinvar", "Heartbeat")
     manageConnection(ai_Enabled, "aivar", "RenderStepped")
 end)
+--[[ to prevent mishaps this linebof code of the ui starts here]]--
+				
 
+--// Services
 local UserInputService = game:GetService("UserInputService");
 
---// Library Second Position
-local Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Manual Spam", Default = false})
-
-Toggle:OnChanged(function(v)
-    if v then 
-        ManualSpam()
-    else
-        Frame.Visible = false
-    end
-end)
-
-local Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Auto Curve", Default = false })
-
-Toggle:OnChanged(function(v)
-    auto_curve = v
-end)
-
-local Dropdown = Tabs.Main:AddDropdown("Dropdown", {
-    Title = "Curve Method",
-    Values = {"Straight", "Upwards", "Random"},
-    Multi = false,
-    Default = "Random",
+--// Library
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/lxte/lates-lib/main/Main.lua"))()
+local Window = Library:CreateWindow({
+	Title = "LOL Hub ",
+	Theme = "Dark",
+	
+	Size = UDim2.fromOffset(570, 370),
+	Transparency = 0.2,
+	Blurring = true,
+	MinimizeKeybind = Enum.KeyCode.LeftAlt,
 })
 
-Dropdown:OnChanged(function(v)
-    if v == "Straight" then
-        getgenv().straight = true 
-        
-        getgenv().upwards = false
-        getgenv().random = false
+local Themes = {
+	Light = {
+		--// Frames:
+		Primary = Color3.fromRGB(232, 232, 232),
+		Secondary = Color3.fromRGB(255, 255, 255),
+		Component = Color3.fromRGB(245, 245, 245),
+		Interactables = Color3.fromRGB(235, 235, 235),
 
-    elseif v == "Upwards" then
-      getgenv().upwards = true
-      
-        getgenv().straight = false 
-        getgenv().random = false
+		--// Text:
+		Tab = Color3.fromRGB(50, 50, 50),
+		Title = Color3.fromRGB(0, 0, 0),
+		Description = Color3.fromRGB(100, 100, 100),
 
-    elseif v == "Random" then
-        getgenv().random = true 
-      
-        getgenv().upwards = false
-        getgenv().straight = false 
-    end
-end)
+		--// Outlines:
+		Shadow = Color3.fromRGB(255, 255, 255),
+		Outline = Color3.fromRGB(210, 210, 210),
 
-local Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Visualize", Default = false })
+		--// Image:
+		Icon = Color3.fromRGB(100, 100, 100),
+	},
+	
+	Dark = {
+		--// Frames:
+		Primary = Color3.fromRGB(30, 30, 30),
+		Secondary = Color3.fromRGB(35, 35, 35),
+		Component = Color3.fromRGB(40, 40, 40),
+		Interactables = Color3.fromRGB(45, 45, 45),
 
-Toggle:OnChanged(function(v)
-    visualize_Enabled = v
-end)
+		--// Text:
+		Tab = Color3.fromRGB(200, 200, 200),
+		Title = Color3.fromRGB(240,240,240),
+		Description = Color3.fromRGB(200,200,200),
 
+		--// Outlines:
+		Shadow = Color3.fromRGB(0, 0, 0),
+		Outline = Color3.fromRGB(40, 40, 40),
+
+		--// Image:
+		Icon = Color3.fromRGB(220, 220, 220),
+	},
+	
+	Void = {
+		--// Frames:
+		Primary = Color3.fromRGB(15, 15, 15),
+		Secondary = Color3.fromRGB(20, 20, 20),
+		Component = Color3.fromRGB(25, 25, 25),
+		Interactables = Color3.fromRGB(30, 30, 30),
+
+		--// Text:
+		Tab = Color3.fromRGB(200, 200, 200),
+		Title = Color3.fromRGB(240,240,240),
+		Description = Color3.fromRGB(200,200,200),
+
+		--// Outlines:
+		Shadow = Color3.fromRGB(0, 0, 0),
+		Outline = Color3.fromRGB(40, 40, 40),
+
+		--// Image:
+		Icon = Color3.fromRGB(220, 220, 220),
+	},
+
+}
+
+--// Set the default theme
+Window:SetTheme(Themes.Dark)
+
+--// Sections
+Window:AddTabSection({
+	Name = "Main",
+	Order = 1,
+})
+			
+local Main = Window:AddTab({
+	Title = "Main",
+	Section = "Main",
+	Icon = "rbxassetid://11963373994"
+})
+				
+Window:AddSection({ Name = "Autoparry", Tab = Main }) 
+
+
+Window:AddToggle({
+	Title = "Autoparry",
+	Description = "Auto Parry",
+	Tab = Main,
+	Callback = function(state)
+	aura_Enabled = state
+    setclipboard("Auto Parry ON")
+
+	end,
+}) 
+
+Window:AddToggle({
+	Title = "Autospam",
+	Description = "Toggles Autospam when near player",
+	Tab = Main,
+	Callback = function(state)
+	
+		auto_spam = state
+	end,
+}) 
+				
+Window:AddToggle({
+	Title = "Manual spam",
+	Description = "A back-up for the Auto spam",
+	Tab = Main,
+	Callback = function(state)
+		           if state then
+            ManualSpam()
+            else 
+            ManualSpam()
+            end
+	end,
+}) 	
+			
+Window:AddSection({ Name = "Parry Misc", Tab = Main }) 
+	
+		Window:AddToggle({
+	Title = "Auto Curve",
+	Description = "Curves the ball",
+	Tab = Main,
+	Callback = function(state)
+	auto_curve = state
+
+	end,
+})
+				
+			
+
+-- Start the check in a new thread
+spawn(checkSpamming)
 local ScreenGui = Instance.new("ScreenGui")
-local TextButton = Instance.new("TextButton")
+local ImageButton = Instance.new("ImageButton")
 local UICorner = Instance.new("UICorner")
 
+-- Configure the ScreenGui
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-TextButton.Parent = ScreenGui
-TextButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-TextButton.BorderSizePixel = 0
-TextButton.Position = UDim2.new(0.120833337, 0, 0.0952890813, 0)
-TextButton.Size = UDim2.new(0, 50, 0, 50)
-TextButton.Draggable = true
-TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextButton.Text = "C"
-TextButton.TextScaled = false
-TextButton.TextWrapped = true
-TextButton.TextXAlignment = Enum.TextXAlignment.Center
-TextButton.TextYAlignment = Enum.TextYAlignment.Center
+-- Configure the ImageButton
+ImageButton.Parent = ScreenGui
+ImageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ImageButton.BorderSizePixel = 0
+ImageButton.Position = UDim2.new(0.120833337, 0, 0.0952890813, 0)
+ImageButton.Size = UDim2.new(0, 50, 0, 50)
+ImageButton.Image = "rbxassetid://000000000" -- Set the image using the decal ID
+ImageButton.Draggable = true
 
-UICorner.Parent = TextButton
+-- Add UICorner for rounded corners
+UICorner.Parent = ImageButton
 
-TextButton.MouseButton1Click:Connect(function()
-    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
+-- Function to handle click event
+ImageButton.MouseButton1Click:Connect(function()
+    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.LeftAlt, false, game)
 end)
---Execute Logs(By Me)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/X-hub2/hyper-lib/refs/heads/main/noLoser"))()
